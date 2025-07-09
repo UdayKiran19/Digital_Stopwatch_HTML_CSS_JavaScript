@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <title>Digital Stopwatch</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+    }
+
+    h1 {
+        font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    #display {
+      font-size: 5rem;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px 30px;
+      border-radius: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 30px;
+    }
+
+    button {
+      padding: 20px 30px;
+      font-size: 2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #start { background-color: #28a745; color: white; }
+    #stop { background-color: #dc3545; color: white; }
+    #reset { background-color: #ffc107; color: black; }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>DIGITAL STOPWATCH</h1>
+  <div id="display">00:00:00.000</div>
+
+  <div class="buttons">
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+  </div>
+
+  <script>
+
+    let startTime = 0;
+    let intervalId;
+    let running = false;
+
+    const display = document.getElementById("display");
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+    const resetBtn = document.getElementById("reset");
+
+    startBtn.onclick = function () {
+      if (!running) {
+        running = true;
+        startTime = Date.now() - (startTime || 0);
+        intervalId = setInterval(updateTime, 10);
+      }
+    };
+
+    stopBtn.onclick = function () {
+      if (running) {
+        running = false;
+        clearInterval(intervalId);
+      }
+    };
+
+    resetBtn.onclick = function () {
+      running = false;
+      clearInterval(intervalId);
+      startTime = 0;
+      display.textContent = "00:00:00.000";
+    };
+
+    function updateTime() {
+      const now = Date.now();
+      const elapsed = now - startTime;
+      const milliseconds = elapsed % 1000;
+      const seconds = Math.floor((elapsed / 1000) % 60);
+      const minutes = Math.floor((elapsed / 1000 / 60) % 60);
+      const hours = Math.floor(elapsed / 1000 / 60 / 60);
+      display.textContent =
+        `${pad(hours)}:${pad(minutes)}:${pad(seconds)}.${padMs(milliseconds)}`;
+    }
+
+    function pad(number) {
+      return number.toString().padStart(2, "0");
+    }
+
+    function padMs(number) {
+      return number.toString().padStart(3, "0");
+    }
+
+  </script>
+</body>
+</html>
